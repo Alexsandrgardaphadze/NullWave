@@ -117,6 +117,13 @@ public class MainViewModel : ViewModelBase
     public ICommand NavigateToPlaylistCommand { get; }
     public ICommand ToggleQueueCommand { get; }
 
+    public double ActiveRightPanelWidth =>
+        Detail.IsOpen ? 240 :
+        Queue.IsOpen ? 240 : 0;
+
+    public Avalonia.Thickness ToastMargin =>
+        new Avalonia.Thickness(0, 0, 24 + ActiveRightPanelWidth + (ActiveRightPanelWidth > 0 ? 8 : 0), 24);
+
     public NavigationViewModel Nav { get; private set; } = null!;
     public QueueViewModel Queue { get; private set; } = null!;
 
@@ -151,6 +158,7 @@ public class MainViewModel : ViewModelBase
         Input = new TrackInputViewModel(_library, _metadata, _urlParser, _downloadService, _spotifyBridge, Settings, albumArtService);
         Library = new LibraryViewModel(_library, _localAI);
         
+        // FIX: Changed GetFolders() to GetAllFolders() to match PlaylistService method name
         _aiPlaylistsFolder = _playlists.GetAllFolders().FirstOrDefault(f => f.Name == "AI Playlists");
         if (_aiPlaylistsFolder == null)
         {
@@ -171,13 +179,21 @@ public class MainViewModel : ViewModelBase
 
         Detail.PropertyChanged += (_, e) =>
         {
-            if (e.PropertyName == nameof(Detail.IsOpen) && Detail.IsOpen)
-                Queue.IsOpen = false;
+            if (e.PropertyName == nameof(Detail.IsOpen) && Detail.IsOpen) Queue.IsOpen = false;
+            if (e.PropertyName == nameof(Detail.IsOpen))
+            {
+                OnPropertyChanged(nameof(ActiveRightPanelWidth));
+                OnPropertyChanged(nameof(ToastMargin));
+            }
         };
         Queue.PropertyChanged += (_, e) =>
         {
-            if (e.PropertyName == nameof(Queue.IsOpen) && Queue.IsOpen)
-                Detail.IsOpen = false;
+            if (e.PropertyName == nameof(Queue.IsOpen) && Queue.IsOpen) Detail.IsOpen = false;
+            if (e.PropertyName == nameof(Queue.IsOpen))
+            {
+                OnPropertyChanged(nameof(ActiveRightPanelWidth));
+                OnPropertyChanged(nameof(ToastMargin));
+            }
         };
 
         Playlist.PinRequested += p => Nav.PinPlaylist(p.Id, p.Name);

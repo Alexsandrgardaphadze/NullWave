@@ -21,12 +21,9 @@ public class QueueViewModel : ViewModelBase
         {
             _isOpen = value;
             OnPropertyChanged();
-            OnPropertyChanged(nameof(PanelWidth));
             OnPropertyChanged(nameof(PanelOpacity));
         }
     }
-
-    public double PanelWidth => _isOpen ? 320 : 0;
     public double PanelOpacity => _isOpen ? 1.0 : 0.0;
 
     // Changed to QueueEntry to match the new LibraryService signature

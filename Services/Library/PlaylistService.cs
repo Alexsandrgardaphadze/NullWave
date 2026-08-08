@@ -15,9 +15,7 @@ public class PlaylistService
     {
         _db = db;
         _playlists = _db.LoadPlaylists(library.GetAll().ToList());
-        // Note: Ensure your DatabaseService has LoadPlaylistFolders() implemented, 
-        // or initialize _folders from your DB accordingly.
-        _folders = _db.LoadPlaylistFolders(); 
+        _folders = _db.LoadPlaylistFolders();
     }
 
     public IReadOnlyList<Playlist> GetAll() => _playlists.AsReadOnly();
@@ -25,7 +23,12 @@ public class PlaylistService
 
     public Playlist Create(string name, string? description = null, Guid? folderId = null)
     {
-        var playlist = new Playlist { Name = name, Description = description, FolderId = folderId };
+        var playlist = new Playlist
+        {
+            Name = name,
+            Description = description,
+            FolderId = folderId
+        };
         _playlists.Add(playlist);
         _db.SavePlaylist(playlist);
         return playlist;
@@ -56,9 +59,7 @@ public class PlaylistService
         {
             _folders.Remove(folder);
             _db.DeletePlaylistFolder(id);
-            
-            // Unlink playlists in this folder rather than deleting them
-            foreach (var playlist in _playlists.Where(p => p.FolderId == id).ToList())
+            foreach (var playlist in _playlists.Where(p => p.FolderId == id))
             {
                 playlist.FolderId = null;
                 _db.SavePlaylist(playlist);
@@ -114,15 +115,6 @@ public class PlaylistService
         if (playlist == null) return false;
         playlist.Name = newName;
         _db.SavePlaylist(playlist);
-        return true;
-    }
-
-    public bool RenameFolder(Guid id, string newName)
-    {
-        var folder = GetFolderById(id);
-        if (folder == null) return false;
-        folder.Name = newName;
-        _db.SavePlaylistFolder(folder);
         return true;
     }
 

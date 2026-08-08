@@ -8,7 +8,6 @@
       x:Class="NullWave.Views.Controls.PlaylistsView"
       x:DataType="vm:MainViewModel"
       ColumnDefinitions="280,1,*">
-
     <Grid.Resources>
         <helpers:BoolToOpacityConverter x:Key="BoolToOpacity"/>
         <converters:FilePathToBitmapConverter x:Key="PathToBitmap"/>
@@ -17,10 +16,7 @@
         <converters:SortFieldDisplayConverter x:Key="SortFieldDisplay"/>
         <converters:BoolToSortIconConverter x:Key="BoolToSortIcon"/>
     </Grid.Resources>
-
-    <!--  LEFT: Playlist list  -->
     <DockPanel Grid.Column="0">
-
         <Border DockPanel.Dock="Top"
                 Background="{StaticResource BrushSurface}"
                 BorderBrush="{StaticResource BrushBorder}"
@@ -32,7 +28,6 @@
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"/>
         </Border>
-
         <ListBox ItemsSource="{Binding Playlist.Playlists}"
                  SelectedItem="{Binding Playlist.SelectedPlaylist}"
                  Background="Transparent"
@@ -50,7 +45,6 @@
                                        Foreground="{StaticResource BrushTextMuted}"
                                        FontSize="{StaticResource FontSizeXs}"/>
                         </StackPanel>
-
                         <Button Grid.Column="1"
                                 Classes="icon-btn sm"
                                 ToolTip.Tip="Unpin from sidebar"
@@ -71,8 +65,6 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-
-        <!-- Empty state -->
         <TextBlock DockPanel.Dock="Bottom"
                    Text="No playlists yet - create one above"
                    Foreground="{StaticResource BrushTextMuted}"
@@ -82,22 +74,14 @@
                    Margin="16"
                    IsVisible="{Binding !Playlist.Playlists.Count}"/>
     </DockPanel>
-
-    <!--  DIVIDER  -->
     <Border Grid.Column="1" Background="{StaticResource BrushBorder}"/>
-
-    <!--  RIGHT: Selected playlist detail  -->
-    <DockPanel Grid.Column="2" IsVisible="{Binding Playlist.SelectedPlaylist, Converter={x:Static ObjectConverters.IsNotNull}}">
-
-        <!-- Header: name (or rename input), track count, delete -->
+    <DockPanel Grid.Column="2" IsVisible="{Binding Playlist.ShowPlaylistDetail}">
         <Border DockPanel.Dock="Top"
                 Background="{StaticResource BrushSurface}"
                 BorderBrush="{StaticResource BrushBorder}"
                 BorderThickness="0,0,0,1"
                 Padding="16,12">
             <Grid ColumnDefinitions="*,Auto,Auto">
-
-                <!-- Normal display -->
                 <StackPanel Grid.Column="0" Spacing="2" IsVisible="{Binding !Playlist.IsRenaming}">
                     <TextBlock Text="{Binding Playlist.SelectedPlaylist.Name}"
                                Foreground="{StaticResource BrushTextPrimary}"
@@ -108,8 +92,6 @@
                                Foreground="{StaticResource BrushTextMuted}"
                                FontSize="{StaticResource FontSizeSm}"/>
                 </StackPanel>
-
-                <!-- Rename input -->
                 <Grid Grid.Column="0" ColumnDefinitions="*,8,Auto,8,Auto"
                       IsVisible="{Binding Playlist.IsRenaming}"
                       VerticalAlignment="Center">
@@ -126,7 +108,6 @@
                             Command="{Binding Playlist.CancelRenameCommand}"
                             Padding="12,6"/>
                 </Grid>
-
                 <Button Grid.Column="1"
                         Classes="icon-btn"
                         ToolTip.Tip="Rename playlist"
@@ -135,7 +116,6 @@
                         Margin="8,0,0,0">
                     <material:MaterialIcon Kind="Pencil" Width="18" Height="18"/>
                 </Button>
-
                 <Button Grid.Column="2"
                         Classes="icon-btn"
                         ToolTip.Tip="Delete playlist"
@@ -146,8 +126,6 @@
                 </Button>
             </Grid>
         </Border>
-
-        <!-- Search + Sort toolbar -->
         <Border DockPanel.Dock="Top"
                 Background="{StaticResource BrushSurface}"
                 BorderBrush="{StaticResource BrushBorder}"
@@ -188,27 +166,21 @@
                         ToolTip.Tip="Toggle sort direction"
                         VerticalAlignment="Center">
                     <material:MaterialIcon Kind="{Binding Playlist.SortAscending, Converter={StaticResource BoolToSortIcon}}"
-                                            Width="18" Height="18"/>
+                                           Width="18" Height="18"/>
                 </Button>
             </Grid>
         </Border>
-
-        <!-- Result count -->
         <TextBlock DockPanel.Dock="Top"
                    Text="{Binding Playlist.ResultCountLabel}"
                    Classes="section-label"
                    FontSize="{StaticResource FontSizeXs}"
                    Margin="16,8,16,0"/>
-
-        <!-- Track list for selected playlist -->
         <ListBox ItemsSource="{Binding Playlist.FilteredTracks}"
                  Background="Transparent"
                  Margin="8,4,8,8">
             <ListBox.ItemTemplate>
                 <DataTemplate x:DataType="models:Track">
                     <Grid ColumnDefinitions="48,*,150,36" Margin="8,5" MinHeight="44">
-
-                        <!-- Now-playing accent bar -->
                         <Border Grid.Column="0"
                                 Width="3"
                                 HorizontalAlignment="Left"
@@ -222,7 +194,6 @@
                                 </MultiBinding>
                             </Border.IsVisible>
                         </Border>
-
                         <Border Grid.Column="0"
                                 Width="40" Height="40"
                                 CornerRadius="{StaticResource RadiusArt}"
@@ -234,14 +205,13 @@
                                        Stretch="UniformToFill"
                                        IsVisible="{Binding AlbumArtPath, Converter={x:Static ObjectConverters.IsNotNull}}"/>
                                 <material:MaterialIcon Kind="MusicNote"
-                                           IsVisible="{Binding AlbumArtPath, Converter={x:Static ObjectConverters.IsNull}}"
-                                           Foreground="{StaticResource BrushTextMuted}"
-                                           Width="18" Height="18"
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Center"/>
+                                                       IsVisible="{Binding AlbumArtPath, Converter={x:Static ObjectConverters.IsNull}}"
+                                                       Foreground="{StaticResource BrushTextMuted}"
+                                                       Width="18" Height="18"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"/>
                             </Panel>
                         </Border>
-
                         <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2" Margin="10,0,8,0">
                             <TextBlock Text="{Binding Title}"
                                        Foreground="{StaticResource BrushTextPrimary}"
@@ -253,7 +223,6 @@
                                        FontSize="{StaticResource FontSizeSm}"
                                        TextTrimming="CharacterEllipsis"/>
                         </StackPanel>
-
                         <Border Grid.Column="2"
                                 VerticalAlignment="Center"
                                 CornerRadius="{StaticResource RadiusFull}"
@@ -267,7 +236,6 @@
                                        FontSize="{StaticResource FontSizeXs}"
                                        FontWeight="SemiBold"/>
                         </Border>
-
                         <Button Grid.Column="3"
                                 Classes="icon-btn"
                                 ToolTip.Tip="Remove from playlist"
@@ -280,8 +248,6 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-
-        <!-- Empty playlist state -->
         <TextBlock Text="This playlist is empty - add tracks from the Library page"
                    Foreground="{StaticResource BrushTextMuted}"
                    FontSize="{StaticResource FontSizeSm}"
@@ -289,7 +255,6 @@
                    VerticalAlignment="Center"
                    Margin="16"
                    IsVisible="{Binding !Playlist.SelectedPlaylist.Tracks.Count}"/>
-                   
         <TextBlock Text="No tracks match your search"
                    Foreground="{StaticResource BrushTextMuted}"
                    FontSize="{StaticResource FontSizeSm}"
@@ -298,21 +263,71 @@
                    Margin="16"
                    IsVisible="{Binding !Playlist.FilteredTracks.Count}"/>
     </DockPanel>
-
-    <!--  No selection state  -->
+    <DockPanel Grid.Column="2" IsVisible="{Binding Playlist.ShowFolderGrid}">
+        <Border DockPanel.Dock="Top"
+                Background="{StaticResource BrushSurface}"
+                BorderBrush="{StaticResource BrushBorder}"
+                BorderThickness="0,0,0,1"
+                Padding="16,12">
+            <Grid ColumnDefinitions="*,Auto">
+                <StackPanel Grid.Column="0" Spacing="2">
+                    <TextBlock Text="{Binding Playlist.SelectedFolder.Name}"
+                               Foreground="{StaticResource BrushTextPrimary}"
+                               FontSize="{StaticResource FontSizeLg}"
+                               FontWeight="Bold"/>
+                    <TextBlock Text="Folder"
+                               Foreground="{StaticResource BrushTextMuted}"
+                               FontSize="{StaticResource FontSizeSm}"/>
+                </StackPanel>
+                <Button Grid.Column="1"
+                        Classes="icon-btn"
+                        ToolTip.Tip="Back to playlists"
+                        Command="{Binding Playlist.NavigateToFolderCommand}"
+                        CommandParameter="{x:Null}">
+                    <material:MaterialIcon Kind="ArrowLeft" Width="18" Height="18"/>
+                </Button>
+            </Grid>
+        </Border>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <ItemsControl ItemsSource="{Binding Playlist.FolderContents}" Margin="16">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="models:Playlist">
+                        <Button Width="160" Height="180" Margin="8"
+                                Background="{StaticResource BrushSurface2}"
+                                CornerRadius="{StaticResource RadiusMd}"
+                                Padding="0"
+                                BorderThickness="0"
+                                Cursor="Hand"
+                                Command="{Binding $parent[ItemsControl].DataContext.Playlist.SelectPlaylistFromFolderCommand}"
+                                CommandParameter="{Binding}">
+                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="8">
+                                <material:MaterialIcon Kind="PlaylistMusic" Width="48" Height="48" Foreground="{StaticResource BrushTextMuted}"/>
+                                <TextBlock Text="{Binding Name}" Foreground="{StaticResource BrushTextPrimary}" FontSize="{StaticResource FontSizeBody}" FontWeight="Medium" TextAlignment="Center" TextTrimming="CharacterEllipsis" MaxLines="2"/>
+                                <TextBlock Text="{Binding Tracks.Count, StringFormat='{}{0} tracks'}" Foreground="{StaticResource BrushTextMuted}" FontSize="{StaticResource FontSizeXs}" TextAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </DockPanel>
     <StackPanel Grid.Column="2"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Spacing="8"
-                IsVisible="{Binding Playlist.SelectedPlaylist, Converter={x:Static ObjectConverters.IsNull}}">
+                IsVisible="{Binding Playlist.ShowEmptyState}">
         <material:MaterialIcon Kind="MusicNote"
-                   Width="48" Height="48"
-                   Foreground="{StaticResource BrushTextMuted}"
-                   HorizontalAlignment="Center"/>
-        <TextBlock Text="Select a playlist to view its tracks"
+                               Width="48" Height="48"
+                               Foreground="{StaticResource BrushTextMuted}"
+                               HorizontalAlignment="Center"/>
+        <TextBlock Text="Select a playlist or folder to view its contents"
                    Foreground="{StaticResource BrushTextMuted}"
                    FontSize="{StaticResource FontSizeBody}"
                    HorizontalAlignment="Center"/>
     </StackPanel>
-
 </Grid>

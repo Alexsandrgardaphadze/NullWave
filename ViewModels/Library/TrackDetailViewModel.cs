@@ -69,7 +69,6 @@ public class TrackDetailViewModel : ViewModelBase
         {
             _isOpen = value;
             OnPropertyChanged();
-            OnPropertyChanged(nameof(PanelWidth));
             OnPropertyChanged(nameof(PanelOpacity));
 
             if (!_isOpen && _currentTrack != null)
@@ -79,8 +78,6 @@ public class TrackDetailViewModel : ViewModelBase
             }
         }
     }
-
-    public double PanelWidth => _isOpen ? 320 : 0;
     public double PanelOpacity => _isOpen ? 1.0 : 0.0;
 
     public string EditTitle
